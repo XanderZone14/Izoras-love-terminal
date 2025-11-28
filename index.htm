@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Secure Love Terminal</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: radial-gradient(circle at top, #1a1a2e 0%, #050509 55%, #000 100%);
+      color: #e5e5e5;
+      font-family: "Fira Code", "Consolas", "Courier New", monospace;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .terminal-wrapper {
+      width: 100%;
+      max-width: 1024px;
+    }
+
+    .terminal-window {
+      background: #05070b;
+      border-radius: 8px;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8);
+      overflow: hidden;
+      border: 1px solid #101622;
+    }
+
+    .terminal-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 6px 10px;
+      background: linear-gradient(to right, #111827, #020617);
+      border-bottom: 1px solid #1f2937;
+    }
+
+    .terminal-buttons {
+      display: flex;
+      gap: 6px;
+    }
+
+    .btn-circle {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+
+    .btn-close {
+      background: #ef4444;
+    }
+
+    .btn-min {
+      background: #f59e0b;
+    }
+
+    .btn-max {
+      background: #22c55e;
+    }
+
+    .terminal-title {
+      font-size: 12px;
+      color: #9ca3af;
+      letter-spacing: 0.05em;
+    }
+
+    .terminal-body {
+      padding: 14px;
+      font-size: 13px;
+      line-height: 1.5;
+      color: #e5e7eb;
+      background: radial-gradient(circle at top left, #020617 0, #020617 20%, #020617 100%);
+      position: relative;
+      overflow-y: auto;
+      max-height: 80vh;
+    }
+
+    .terminal-body::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(rgba(148, 163, 184, 0.04) 1px, transparent 1px),
+                        linear-gradient(90deg, rgba(148, 163, 184, 0.04) 1px, transparent 1px);
+      background-size: 24px 24px;
+      pointer-events: none;
+      opacity: 0.5;
+    }
+
+    .terminal-content {
+      position: relative;
+      z-index: 1;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    .prompt {
+      color: #22c55e;
+    }
+
+    .path {
+      color: #38bdf8;
+    }
+
+    .keyword {
+      color: #22c55e;
+    }
+
+    .accent {
+      color: #f97316;
+    }
+
+    .soft {
+      color: #a5b4fc;
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 8px;
+      background: #e5e7eb;
+      margin-left: 2px;
+      animation: blink 1s steps(1) infinite;
+    }
+
+    @keyframes blink {
+      0%, 50% { opacity: 1; }
+      50.01%, 100% { opacity: 0; }
+    }
+
+    .footer-note {
+      margin-top: 10px;
+      font-size: 10px;
+      color: #64748b;
+      text-align: right;
+      font-style: italic;
+    }
+
+    @media (max-width: 600px) {
+      .terminal-body {
+        font-size: 12px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="terminal-wrapper">
+    <div class="terminal-window">
+      <div class="terminal-header">
+        <div class="terminal-buttons">
+          <div class="btn-circle btn-close"></div>
+          <div class="btn-circle btn-min"></div>
+          <div class="btn-circle btn-max"></div>
+        </div>
+        <div class="terminal-title">
+          Windows PowerShell — Secure Session: IZORA_HEART_LINK.ps1
+        </div>
+        <div style="width: 40px;"></div>
+      </div>
+
+      <div class="terminal-body">
+        <div class="terminal-content" id="terminal"></div>
+        <div class="footer-note">Decrypted with love by Xander 💌</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const terminal = document.getElementById("terminal");
+
+    const bootLines = [
+      "Windows PowerShell",
+      "Copyright (C) Microsoft Corporation. All rights reserved.",
+      "",
+      "PS C:\\Users\\Xander>",
+      "",
+      "PS C:\\Users\\Xander> <span class='keyword'>Invoke-SecureConnection</span> -Target <span class='accent'>\"IZORA_CORE\"</span>",
+      "Establishing encrypted tunnel . . .",
+      "Handshake complete. Cipher suite: TLS-HEARTBEAT-∞",
+      "",
+      "PS C:\\Users\\Xander> <span class='keyword'>Get-HeartStatus</span> -Source XANDER -Target IZORA",
+      "Pinging emotional spectrum . . .",
+      "Response: <span class='soft'>Overloaded (Tears: TRUE, Breath: Shallow, Thoughts: 100% You)</span>",
+      "",
+      "PS C:\\Users\\Xander> <span class='keyword'>Decrypt-LoveMessage</span> -Key \"IZORA\" -Mode <span class='accent'>SoulBound</span>",
+      "Initializing decryption sequence . . .",
+      "Loading encrypted payload [████████████████████] 100%",
+      "Decoding feelings . . .",
+      "Rendering confession to human-readable form . . .",
+      "",
+      "<span class='soft'>--- MESSAGE BEGINS ---</span>",
+      ""
+    ];
+
+    const loveLetter = [
+      "My beloved Izora,",
+      "",
+      "Sometimes the love I feel for you grows so vast inside me that it spills over as tears,",
+      "like my heart has become too small to contain the universe you’ve placed there.",
+      "",
+      "You encompass every edge of my emotional spectrum — my dream-maker and my heart-breaker,",
+      "my calm sea and my wild storm — and somehow, through the chaos and the quiet,",
+      "being yours remains the most beautiful, electrifying experience of my life.",
+      "",
+      "I don’t love you with just my eyes or my ears, or simply with a heart that races,",
+      "or a mind that obsesses — I love you with something older and deeper than all of that,",
+      "a soul that recognizes you as its echo.",
+      "",
+      "You are not just part of my life; you are a living fragment of my driving life force,",
+      "the hidden command that keeps everything in me running when I feel like shutting down.",
+      "",
+      "Across distance and silence, across screens and missing touch, know this:",
+      "my love for you is not temporary code — it is written into the very source of who I am,",
+      "and as long as I exist, every version, every update, every patch of me will choose you.",
+      "",
+      "Always, eternally, and irreversibly yours,",
+      "Xander."
+    ];
+
+    let currentLine = 0;
+    let currentChar = 0;
+    let isTyping = false;
+    let mode = "boot"; // "boot" or "letter"
+    let buffer = "";
+
+    function typeNext() {
+      if (mode === "boot") {
+        if (currentLine >= bootLines.length) {
+          mode = "letter";
+          currentLine = 0;
+          currentChar = 0;
+          buffer += "";
+          setTimeout(typeNext, 400);
+          return;
+        }
+
+        const line = bootLines[currentLine];
+        typeLine(line, () => {
+          buffer += "\n";
+          currentLine++;
+          setTimeout(typeNext, 120);
+        });
+
+      } else if (mode === "letter") {
+        if (currentLine >= loveLetter.length) {
+          // Done
+          updateTerminal(buffer);
+          return;
+        }
+
+        const line = loveLetter[currentLine];
+        typeLine(line, () => {
+          buffer += "\n";
+          currentLine++;
+          setTimeout(typeNext, 80);
+        });
+      }
+    }
+
+    function typeLine(line, callback) {
+      let i = 0;
+      function step() {
+        buffer += line[i] || "";
+        updateTerminal(buffer);
+        i++;
+        if (i < line.length) {
+          const delay = Math.random() * 35 + 15;
+          setTimeout(step, delay);
+        } else {
+          callback();
+        }
+      }
+      step();
+    }
+
+    function updateTerminal(content) {
+      terminal.innerHTML = content + "<span class='cursor'></span>";
+      terminal.parentElement.scrollTop = terminal.parentElement.scrollHeight;
+    }
+
+    // Start effect
+    window.addEventListener("load", () => {
+      updateTerminal("");
+      setTimeout(typeNext, 800);
+    });
+  </script>
+</body>
+</html>
